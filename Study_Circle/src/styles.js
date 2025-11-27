@@ -1,0 +1,81 @@
+export const styles = {
+  container: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+  },
+  header: {
+    backgroundColor: "#646cff",
+    color: "white",
+    padding: "16px",
+    textAlign: "center",
+  },
+  main: {
+    flex: 1,
+    padding: "16px",
+  },
+  footer: {
+    backgroundColor: "#f9f9f9",
+    padding: "16px",
+    textAlign: "center",
+    fontSize: "14px",
+  },
+  controlsRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "16px",
+  },
+  search: {
+    padding: "8px 12px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    fontSize: "14px",
+    width: "300px",
+  },
+  filterBox: {
+    display: "flex",
+    gap: "16px",
+  },
+  filterLabel: {
+    display: "flex",
+    alignItems: "center",
+    fontSize: "14px",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    marginTop: "8px",
+  },
+  link: {
+    color: "#646cff",
+    textDecoration: "none",
+  },
+  btn: {
+    padding: "8px 16px",
+    border: "1px solid #646cff",
+    borderRadius: "4px",
+    backgroundColor: "#f9f9f9",
+    color: "#213547",
+    cursor: "pointer",
+    fontSize: "14px",
+  },
+  btnSecondary: {
+    padding: "8px 16px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    backgroundColor: "#f9f9f9",
+    color: "#213547",
+    cursor: "pointer",
+    fontSize: "14px",
+  },
+  dangerBtn: {
+    padding: "8px 16px",
+    border: "1px solid #d9534f",
+    borderRadius: "4px",
+    backgroundColor: "#d9534f",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "14px",
+  },
+};
