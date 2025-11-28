@@ -1,3 +1,4 @@
+// src/components/App.jsx
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
@@ -5,7 +6,6 @@ import { styles } from "../styles.js";
 import Home from "./Home.jsx";
 import SprintRoom from "./Sprint_room.jsx";
 
-// ---------- Mock DB (you can also move this to db.json) ----------
 const initialSprints = [
   {
     id: "1",
@@ -42,16 +42,54 @@ const initialSprints = [
   },
 ];
 
-// ---------- App ----------
 export default function App() {
+  console.log("App: render start");
+
+  // track if we detected a parsing/init error (set safely from an effect)
+  const [initError, setInitError] = useState(null);
+
+  // Initialize sprints from localStorage (or fallback to initialSprints).
+  // Important: do NOT call state setters (like setInitError) while initializing state.
   const [sprints, setSprints] = useState(() => {
-    const raw = localStorage.getItem("sprints_v1");
-    const loaded = raw ? JSON.parse(raw) : initialSprints;
-    return loaded.map((s) => ({ ...s, status: computeStatusFromDates(s) }));
+    try {
+      const raw = localStorage.getItem("sprints_v1");
+      const loaded = raw ? JSON.parse(raw) : initialSprints;
+
+      const mapped = loaded.map((s) => {
+        try {
+          return { ...s, status: computeStatusFromDates(s) };
+        } catch (e) {
+          console.error("computeStatusFromDates error for sprint", s.id, e);
+          return { ...s, status: s.status || "unknown" };
+        }
+      });
+
+      console.log("App: initial sprints loaded", mapped);
+      return mapped;
+    } catch (e) {
+      // Can't call setInitError here — return a safe fallback and set the error in an effect
+      console.error("App: failed to parse sprints_v1 or init mapping", e);
+      return initialSprints;
+    }
   });
 
+  // If localStorage had malformed JSON, detect it now and set initError safely.
   useEffect(() => {
-    localStorage.setItem("sprints_v1", JSON.stringify(sprints));
+    try {
+      const raw = localStorage.getItem("sprints_v1");
+      if (raw) JSON.parse(raw);
+    } catch (e) {
+      setInitError(e);
+    }
+  }, []);
+
+  // persist sprints to localStorage on changes (defensive)
+  useEffect(() => {
+    try {
+      localStorage.setItem("sprints_v1", JSON.stringify(sprints));
+    } catch (e) {
+      console.error("Failed to save sprints to localStorage", e);
+    }
   }, [sprints]);
 
   const updateSprint = (id, patch) => {
@@ -59,6 +97,18 @@ export default function App() {
       prev.map((s) => (s.id === id ? { ...s, ...patch } : s))
     );
   };
+
+  // Simple visual fallback if an init error occurred
+  if (initError) {
+    return (
+      <div style={{ padding: 20 }}>
+        <h2>App failed to initialize — check console</h2>
+        <pre>{String(initError)}</pre>
+      </div>
+    );
+  }
+
+  console.log("App: render OK");
 
   return (
     <BrowserRouter>
@@ -75,9 +125,7 @@ export default function App() {
             />
             <Route
               path="/room/:id"
-              element={
-                <SprintRoom sprints={sprints} updateSprint={updateSprint} />
-              }
+              element={<SprintRoom sprints={sprints} updateSprint={updateSprint} />}
             />
           </Routes>
         </main>

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
 import { styles } from "../styles.js";
-import { CreateModal } from "./Form.jsx";
+import CreateModal from "./Form.jsx";
 
 function Home({ sprints, setSprints }) {
   const [query, setQuery] = useState("");
