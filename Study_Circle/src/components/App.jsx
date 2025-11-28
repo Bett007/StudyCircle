@@ -45,12 +45,9 @@ const initialSprints = [
 export default function App() {
   console.log("App: render start");
 
-  // track if we detected a parsing/init error (set safely from an effect)
-  const [initError, setInitError] = useState(null);
-
-  // Initialize sprints from localStorage (or fallback to initialSprints).
-  // Important: do NOT call state setters (like setInitError) while initializing state.
-  const [sprints, setSprints] = useState(() => {
+  // Compute initial load synchronously (before hooks) so we can initialize both
+  // sprints and initError without calling setState in an effect.
+  const initialLoad = (() => {
     try {
       const raw = localStorage.getItem("sprints_v1");
       const loaded = raw ? JSON.parse(raw) : initialSprints;
@@ -65,25 +62,19 @@ export default function App() {
       });
 
       console.log("App: initial sprints loaded", mapped);
-      return mapped;
+      return { sprints: mapped, initError: null };
     } catch (e) {
-      // Can't call setInitError here — return a safe fallback and set the error in an effect
       console.error("App: failed to parse sprints_v1 or init mapping", e);
-      return initialSprints;
+      // Return fallback sprints and the parsing error for display.
+      return { sprints: initialSprints, initError: e };
     }
-  });
+  })();
 
-  // If localStorage had malformed JSON, detect it now and set initError safely.
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("sprints_v1");
-      if (raw) JSON.parse(raw);
-    } catch (e) {
-      setInitError(e);
-    }
-  }, []);
+  // Initialize state from the precomputed result (no setter calls here).
+  const [initError] = useState(initialLoad.initError);
+  const [sprints, setSprints] = useState(initialLoad.sprints);
 
-  // persist sprints to localStorage on changes (defensive)
+  // persist sprints to localStorage on changes
   useEffect(() => {
     try {
       localStorage.setItem("sprints_v1", JSON.stringify(sprints));
