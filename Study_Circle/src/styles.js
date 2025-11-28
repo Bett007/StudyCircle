@@ -1,0 +1,111 @@
+// ---------- Styles ----------
+export const styles = {
+  container: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+  },
+  header: {
+    backgroundColor: "#f0f0f0",
+    padding: "16px",
+    borderBottom: "1px solid #ccc",
+  },
+  main: {
+    flex: 1,
+    padding: "16px",
+  },
+  footer: {
+    backgroundColor: "#f0f0f0",
+    padding: "16px",
+    borderTop: "1px solid #ccc",
+    textAlign: "center",
+    fontSize: "14px",
+  },
+  controlsRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "16px",
+  },
+  search: {
+    padding: "8px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    width: "300px",
+  },
+  filterBox: {
+    display: "flex",
+    gap: "16px",
+  },
+  filterLabel: {
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    border: "1px solid #ccc",
+  },
+  link: {
+    color: "#007bff",
+    textDecoration: "none",
+  },
+  btn: {
+    padding: "8px 16px",
+    backgroundColor: "#007bff",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  btnSecondary: {
+    padding: "8px 16px",
+    backgroundColor: "#6c757d",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  card: {
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    padding: "16px",
+    backgroundColor: "white",
+  },
+  pill: {
+    backgroundColor: "#e9ecef",
+    padding: "4px 8px",
+    borderRadius: "12px",
+    fontSize: "12px",
+  },
+  dangerBtn: {
+    padding: "8px 16px",
+    backgroundColor: "#dc3545",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modal: {
+    backgroundColor: "white",
+    padding: "20px",
+    borderRadius: "8px",
+    width: "400px",
+    maxWidth: "90%",
+  },
+  field: {
+    marginBottom: "12px",
+  },
+};

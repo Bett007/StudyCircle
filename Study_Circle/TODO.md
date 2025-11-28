@@ -1,0 +1,4 @@
+- [ ] Fix App.jsx: Remove setState in useEffect by computing statuses in useState initializer
+- [ ] Fix Pomodoro.jsx: Move timer stop logic to interval callback to avoid setState in useEffect
+- [ ] Fix Home.jsx: Remove unused updateSprint prop
+- [ ] Fix Form.jsx: Change to named export and update import in Home.jsx
