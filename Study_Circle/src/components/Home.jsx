@@ -1,13 +1,12 @@
-// ---------- Home Component (wireframe 1) ----------
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { computeStatusFromDates } from "../utils.js";
 import { styles } from "../styles.js";
 import CreateModal from "./Form.jsx";
+import Sprint_room from "./Sprint_room.jsx";
 
 function Home({ sprints, setSprints }) {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
+    all: true,
     scheduled: true,
     running: true,
     paused: true,
@@ -15,109 +14,125 @@ function Home({ sprints, setSprints }) {
   });
   const [showCreate, setShowCreate] = useState(false);
   const [createType, setCreateType] = useState("personal");
+  const [activeSprint, setActiveSprint] = useState(null);
 
+  // ---------- FILTERED SPRINTS ----------
   const filtered = sprints.filter((s) => {
     const matchesQuery = s.name.toLowerCase().includes(query.toLowerCase());
-    const status = computeStatusFromDates(s);
+    const status = s.status || "scheduled";
+    if (filters.all) return matchesQuery;
     return matchesQuery && filters[status];
   });
 
+  // ---------- UPDATE SPRINT ----------
+  const updateSprint = (id, updates) => {
+    setSprints((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, ...updates } : s))
+    );
+  };
+
   return (
-    <div>
-      <div style={styles.controlsRow}>
-        <input
-          placeholder="🔍 Search for sprint room..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          style={styles.search}
-        />
-
-        <div style={styles.filterBox}>
-          <label style={styles.filterLabel}>
-            <input
-              type="checkbox"
-              checked={filters.scheduled}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, scheduled: e.target.checked }))
-              }
-            />{" "}
-            Scheduled
-          </label>
-          <label style={styles.filterLabel}>
-            <input
-              type="checkbox"
-              checked={filters.running}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, running: e.target.checked }))
-              }
-            />{" "}
-            Ongoing
-          </label>
-          <label style={styles.filterLabel}>
-            <input
-              type="checkbox"
-              checked={filters.paused}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, paused: e.target.checked }))
-              }
-            />{" "}
-            Paused
-          </label>
-          <label style={styles.filterLabel}>
-            <input
-              type="checkbox"
-              checked={filters.completed}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, completed: e.target.checked }))
-              }
-            />{" "}
-            Completed
-          </label>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "flex-start",
+        height: "80vh",
+        overflowY: "auto",
+        padding: 20,
+        background: "#f7f8fa",
+        position: "relative",
+      }}
+    >
+      {/* LEFT PANEL */}
+      <div
+        style={{
+          width: 800, // wider panel toward center
+          background: "#fff",
+          padding: 20,
+          borderRadius: 14,
+          boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+        }}
+      >
+        {/* SEARCH + FILTERS */}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <input
+            placeholder="🔍 Search for sprint room..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            style={{ ...styles.search, fontSize: 15, padding: "8px 10px", flex: 1 }}
+          />
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", fontSize: 13 }}>
+            {["all", "scheduled", "running", "paused", "completed"].map((f) => (
+              <label key={f} style={{ fontSize: 13, cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={filters[f]}
+                  onChange={(e) =>
+                    setFilters((prev) => ({ ...prev, [f]: e.target.checked }))
+                  }
+                />{" "}
+                {f.charAt(0).toUpperCase() + f.slice(1)}
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <section style={{ marginTop: 16 }}>
-        <h3>Rooms</h3>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Room</th>
-              <th>Owner</th>
-              <th>Status</th>
-              <th>Closing Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((s, idx) => {
-              const status = computeStatusFromDates(s);
-              return (
-                <tr key={s.id}>
-                  <td>{idx + 1}</td>
-                  <td>
-                    <Link to={`/room/${s.id}`} style={styles.link}>
-                      {s.name}
-                    </Link>
-                  </td>
-                  <td>{s.owner}</td>
-                  <td>{status}</td>
-                  <td>{s.endDate || "—"}</td>
+        {/* TABLE */}
+        <div
+          style={{
+            maxHeight: 400, // scrollable table
+            overflowY: "auto",
+            border: "1px solid #e0e0e0",
+            borderRadius: 10,
+          }}
+        >
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15 }}>
+            <thead>
+              <tr
+                style={{
+                  background: "#e8f1ff",
+                  fontSize: 16,
+                  position: "sticky",
+                  top: 0,
+                  zIndex: 2,
+                }}
+              >
+                <th style={{ padding: 10, textAlign: "left" }}>#</th>
+                <th style={{ padding: 10, textAlign: "left" }}>Room</th>
+                <th style={{ padding: 10, textAlign: "left" }}>Owner</th>
+                <th style={{ padding: 10, textAlign: "left" }}>Status</th>
+                <th style={{ padding: 10, textAlign: "left" }}>Closing Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((s, idx) => (
+                <tr
+                  key={s.id}
+                  style={{ borderBottom: "1px solid #f0f0f0", height: 42, cursor: "pointer" }}
+                  onClick={() => setActiveSprint(s)}
+                >
+                  <td style={{ padding: "10px 8px" }}>{idx + 1}</td>
+                  <td style={{ padding: "10px 8px" }}>{s.name}</td>
+                  <td style={{ padding: "10px 8px" }}>{s.owner}</td>
+                  <td style={{ padding: "10px 8px", textTransform: "capitalize" }}>{s.status}</td>
+                  <td style={{ padding: "10px 8px" }}>{s.endDate || "—"}</td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </section>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      <section style={{ marginTop: 20 }}>
-        <h4>Create sprint:</h4>
-        <div style={{ display: "flex", gap: 8 }}>
+        {/* CREATE BUTTONS */}
+        <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
           <button
             onClick={() => {
               setCreateType("personal");
               setShowCreate(true);
             }}
-            style={styles.btn}
+            style={{ ...styles.btn, padding: "8px 14px", fontSize: 14, width: 140 }}
           >
             Personal
           </button>
@@ -126,21 +141,32 @@ function Home({ sprints, setSprints }) {
               setCreateType("group");
               setShowCreate(true);
             }}
-            style={styles.btn}
+            style={{ ...styles.btn, padding: "8px 14px", fontSize: 14, width: 140 }}
           >
-            Group sprint
+            Group Sprint
           </button>
         </div>
-      </section>
+      </div>
 
+      {/* CREATE MODAL */}
       {showCreate && (
         <CreateModal
           type={createType}
           onClose={() => setShowCreate(false)}
           onCreate={(newSprint) => {
-            setSprints((p) => [newSprint, ...p]);
+            setSprints((prev) => [newSprint, ...prev]);
             setShowCreate(false);
           }}
+        />
+      )}
+
+      {/* SPRINTROOM MODAL */}
+      {activeSprint && (
+        <Sprint_room
+          sprint={activeSprint}
+          members={[]}
+          updateSprint={updateSprint}
+          onClose={() => setActiveSprint(null)}
         />
       )}
     </div>
