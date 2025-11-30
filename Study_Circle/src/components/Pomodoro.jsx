@@ -73,7 +73,7 @@ function PomodoroModal({ onClose }) {
         </div>
 
         <div style={{ width: 320 }}>
-          <h4>Spotify (mini)</h4>
+          <h4>Spotify</h4>
           {/* Replace the src with a valid Spotify embed url or your own player. */}
           <div style={{ border: "1px solid #ddd", height: 200 }}>
             <iframe

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
 import { styles } from "../styles.js";
 import Home from "./Home.jsx";
-import SprintRoom from "./Sprint_room.jsx";
+import Sprint_room from "./Sprint_room.jsx";
 
-// ---------- Mock DB (you can also move this to db.json) ----------
+// ---------- Mock DB ----------
 const initialSprints = [
   {
     id: "1",
@@ -15,7 +15,7 @@ const initialSprints = [
     startDate: "2024-11-25",
     endDate: "2024-12-25",
     status: "running",
-    members: ["Brian"],
+    members: ["1", "2"], // IDs from JSONBin members
     tasks: ["Setup project", "Create components"],
   },
   {
@@ -26,19 +26,8 @@ const initialSprints = [
     startDate: "2024-12-25",
     endDate: "2024-12-26",
     status: "scheduled",
-    members: ["Taran"],
+    members: ["3"],
     tasks: ["Read docs", "Build small app"],
-  },
-  {
-    id: "3",
-    name: "Components",
-    owner: "Fidel",
-    description: "Break down UI into reusable pieces.",
-    startDate: "2024-10-01",
-    endDate: "2024-10-10",
-    status: "completed",
-    members: ["Fidel"],
-    tasks: ["Design UI", "Implement layout"],
   },
 ];
 
@@ -47,9 +36,31 @@ export default function App() {
   const [sprints, setSprints] = useState(() => {
     const raw = localStorage.getItem("sprints_v1");
     const loaded = raw ? JSON.parse(raw) : initialSprints;
-    return loaded.map((s) => ({ ...s, status: computeStatusFromDates(s) }));
+    return loaded.map((s) => ({ ...s, status: computeStatusFromDates(s), secondsElapsed: 0 }));
   });
 
+  const [members, setMembers] = useState([]);
+
+  // Fetch members from JSONBin
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const res = await fetch("https://api.jsonbin.io/v3/b/YOUR_BIN_ID/latest", {
+          headers: {
+            // "X-Master-Key": "YOUR_JSONBIN_KEY", // if private
+          },
+        });
+        const data = await res.json();
+        setMembers(data.record.members || []);
+      } catch (err) {
+        console.error("Failed to fetch members:", err);
+        setMembers([]);
+      }
+    };
+    fetchMembers();
+  }, []);
+
+  // Save sprints to localStorage
   useEffect(() => {
     localStorage.setItem("sprints_v1", JSON.stringify(sprints));
   }, [sprints]);
@@ -71,13 +82,11 @@ export default function App() {
           <Routes>
             <Route
               path="/"
-              element={<Home sprints={sprints} setSprints={setSprints} />}
+              element={<Home sprints={sprints} setSprints={setSprints} members={members} />}
             />
             <Route
               path="/room/:id"
-              element={
-                <SprintRoom sprints={sprints} updateSprint={updateSprint} />
-              }
+              element={<Sprint_room sprints={sprints} updateSprint={updateSprint} members={members} />}
             />
           </Routes>
         </main>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { computeStatusFromDates } from "../utils.js";
 import { styles } from "../styles.js";
 import CreateModal from "./Form.jsx";
+import Sprint_room from "./Sprint_room.jsx";
+import { computeStatusFromDates } from "../utils.js";
 
 function Home({ sprints, setSprints }) {
+  const [members, setMembers] = useState([]);
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
     all: true,
@@ -16,11 +17,26 @@ function Home({ sprints, setSprints }) {
   const [showCreate, setShowCreate] = useState(false);
   const [createType, setCreateType] = useState("personal");
 
-  // Lock body scroll when modal is open
-  useEffect(() => {
-    document.body.style.overflow = showCreate ? "hidden" : "auto";
-  }, [showCreate]);
+  // NEW: state to track currently open sprint
+  const [openSprint, setOpenSprint] = useState(null);
 
+  // ---------- FETCH MEMBERS FROM JSONBIN ----------
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const res = await fetch(
+          "https://api.jsonbin.io/v3/b/692c8bc9ae596e708f7aa204"
+        );
+        const data = await res.json();
+        setMembers(data.record.members || []);
+      } catch (err) {
+        console.error("Failed to fetch members:", err);
+      }
+    };
+    fetchMembers();
+  }, []);
+
+  // ---------- FILTERED SPRINTS ----------
   const filtered = sprints.filter((s) => {
     const matchesQuery = s.name.toLowerCase().includes(query.toLowerCase());
     const status = computeStatusFromDates(s);
@@ -33,9 +49,10 @@ function Home({ sprints, setSprints }) {
       style={{
         display: "flex",
         justifyContent: "flex-start",
+        height: "100vh",
+        overflowY: "auto",
         padding: 20,
         background: "#f7f8fa",
-        minHeight: "100vh",
       }}
     >
       {/* LEFT PANEL */}
@@ -64,7 +81,6 @@ function Home({ sprints, setSprints }) {
               flex: 1,
             }}
           />
-
           <div
             style={{
               display: "flex",
@@ -91,7 +107,7 @@ function Home({ sprints, setSprints }) {
         {/* TABLE */}
         <div
           style={{
-            maxHeight: "auto",
+            maxHeight: 220,
             overflowY: "auto",
             border: "1px solid #e0e0e0",
             borderRadius: 10,
@@ -124,6 +140,7 @@ function Home({ sprints, setSprints }) {
             <tbody>
               {filtered.map((s, idx) => {
                 const status = computeStatusFromDates(s);
+                const owner = members.find((m) => m.id === s.owner);
                 return (
                   <tr
                     key={s.id}
@@ -134,11 +151,14 @@ function Home({ sprints, setSprints }) {
                   >
                     <td style={{ padding: "10px 8px" }}>{idx + 1}</td>
                     <td style={{ padding: "10px 8px" }}>
-                      <Link to={`/room/${s.id}`} style={styles.link}>
+                      <span
+                        style={{ ...styles.link, cursor: "pointer" }}
+                        onClick={() => setOpenSprint(s)}
+                      >
                         {s.name}
-                      </Link>
+                      </span>
                     </td>
-                    <td style={{ padding: "10px 8px" }}>{s.owner}</td>
+                    <td style={{ padding: "10px 8px" }}>{owner?.name || "—"}</td>
                     <td
                       style={{
                         padding: "10px 8px",
@@ -156,7 +176,7 @@ function Home({ sprints, setSprints }) {
         </div>
 
         {/* CREATE BUTTONS */}
-        <div style={{ display: "flex", gap: 16, justifyContent: "flex-start" }}>
+        <div style={{ display: "flex", gap: 10 }}>
           <button
             onClick={() => {
               setCreateType("personal");
@@ -164,7 +184,7 @@ function Home({ sprints, setSprints }) {
             }}
             style={{
               ...styles.btn,
-              padding: "10px 16px",
+              padding: "8px 14px",
               fontSize: 14,
               width: 140,
             }}
@@ -179,7 +199,7 @@ function Home({ sprints, setSprints }) {
             }}
             style={{
               ...styles.btn,
-              padding: "10px 16px",
+              padding: "8px 14px",
               fontSize: 14,
               width: 140,
             }}
@@ -198,6 +218,22 @@ function Home({ sprints, setSprints }) {
             setSprints((prev) => [newSprint, ...prev]);
             setShowCreate(false);
           }}
+        />
+      )}
+
+      {/* ---------- SPRINT ROOM MODAL ---------- */}
+      {openSprint && (
+        <Sprint_room
+          sprint={openSprint}
+          members={members}
+          updateSprint={(updates) => {
+            setSprints((prev) =>
+              prev.map((sp) =>
+                sp.id === openSprint.id ? { ...sp, ...updates } : sp
+              )
+            );
+          }}
+          onClose={() => setOpenSprint(null)}
         />
       )}
     </div>
