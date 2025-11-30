@@ -1,5 +1,4 @@
-// ---------- Home Component ----------
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
 import { styles } from "../styles.js";
@@ -17,12 +16,16 @@ function Home({ sprints, setSprints }) {
   const [showCreate, setShowCreate] = useState(false);
   const [createType, setCreateType] = useState("personal");
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = showCreate ? "hidden" : "auto";
+  }, [showCreate]);
+
   const filtered = sprints.filter((s) => {
     const matchesQuery = s.name.toLowerCase().includes(query.toLowerCase());
     const status = computeStatusFromDates(s);
-    return (
-      matchesQuery && (filters.all || filters[status])
-    );
+    if (filters.all) return matchesQuery;
+    return matchesQuery && filters[status];
   });
 
   return (
@@ -30,41 +33,48 @@ function Home({ sprints, setSprints }) {
       style={{
         display: "flex",
         justifyContent: "flex-start",
-        gap: 24,
-        padding: 16,
+        padding: 20,
+        background: "#f7f8fa",
+        minHeight: "100vh",
       }}
     >
-      {/* Left-side Container */}
+      {/* LEFT PANEL */}
       <div
         style={{
-          width: 500,
+          width: 520,
           background: "#fff",
-          padding: 16,
-          borderRadius: 12,
-          boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
+          padding: 20,
+          borderRadius: 14,
+          boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
           display: "flex",
           flexDirection: "column",
           gap: 16,
         }}
       >
-        {/* Search and Filters */}
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+        {/* SEARCH + FILTERS */}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <input
             placeholder="🔍 Search for sprint room..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             style={{
-              padding: 8,
+              ...styles.search,
+              fontSize: 15,
+              padding: "8px 10px",
               flex: 1,
-              minWidth: 180,
-              borderRadius: 8,
-              border: "1px solid #ddd",
-              fontSize: 12,
             }}
           />
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              flexWrap: "wrap",
+              fontSize: 13,
+            }}
+          >
             {["all", "scheduled", "running", "paused", "completed"].map((f) => (
-              <label key={f} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12 }}>
+              <label key={f} style={{ fontSize: 13, cursor: "pointer" }}>
                 <input
                   type="checkbox"
                   checked={filters[f]}
@@ -78,46 +88,66 @@ function Home({ sprints, setSprints }) {
           </div>
         </div>
 
-        {/* Rooms Table */}
-        <div style={{ maxHeight: 300, overflowY: "auto" }}>
+        {/* TABLE */}
+        <div
+          style={{
+            maxHeight: "auto",
+            overflowY: "auto",
+            border: "1px solid #e0e0e0",
+            borderRadius: 10,
+          }}
+        >
           <table
             style={{
               width: "100%",
               borderCollapse: "collapse",
-              fontSize: 12,
+              fontSize: 15,
             }}
           >
-            <thead style={{ position: "sticky", top: 0, background: "#fff", zIndex: 1 }}>
-              <tr>
-                {["#", "Room", "Owner", "Status", "Closing Date"].map((h) => (
-                  <th
-                    key={h}
-                    style={{
-                      textAlign: "left",
-                      padding: "8px 12px",
-                      borderBottom: "1px solid #e0e0e0",
-                      verticalAlign: "middle",
-                    }}
-                  >
-                    {h}
-                  </th>
-                ))}
+            <thead>
+              <tr
+                style={{
+                  background: "#e8f1ff",
+                  fontSize: 16,
+                  position: "sticky",
+                  top: 0,
+                  zIndex: 2,
+                }}
+              >
+                <th style={{ padding: 10, textAlign: "left" }}>#</th>
+                <th style={{ padding: 10, textAlign: "left" }}>Room</th>
+                <th style={{ padding: 10, textAlign: "left" }}>Owner</th>
+                <th style={{ padding: 10, textAlign: "left" }}>Status</th>
+                <th style={{ padding: 10, textAlign: "left" }}>Closing Date</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((s, idx) => {
                 const status = computeStatusFromDates(s);
                 return (
-                  <tr key={s.id}>
-                    <td style={{ padding: "8px 12px", verticalAlign: "middle" }}>{idx + 1}</td>
-                    <td style={{ padding: "8px 12px", verticalAlign: "middle" }}>
+                  <tr
+                    key={s.id}
+                    style={{
+                      borderBottom: "1px solid #f0f0f0",
+                      height: 42,
+                    }}
+                  >
+                    <td style={{ padding: "10px 8px" }}>{idx + 1}</td>
+                    <td style={{ padding: "10px 8px" }}>
                       <Link to={`/room/${s.id}`} style={styles.link}>
                         {s.name}
                       </Link>
                     </td>
-                    <td style={{ padding: "8px 12px", verticalAlign: "middle" }}>{s.owner}</td>
-                    <td style={{ padding: "8px 12px", verticalAlign: "middle" }}>{status}</td>
-                    <td style={{ padding: "8px 12px", verticalAlign: "middle" }}>{s.endDate || "—"}</td>
+                    <td style={{ padding: "10px 8px" }}>{s.owner}</td>
+                    <td
+                      style={{
+                        padding: "10px 8px",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {status}
+                    </td>
+                    <td style={{ padding: "10px 8px" }}>{s.endDate || "—"}</td>
                   </tr>
                 );
               })}
@@ -125,57 +155,51 @@ function Home({ sprints, setSprints }) {
           </table>
         </div>
 
-        {/* Create Sprint Buttons */}
-        <div style={{ display: "flex", gap: 12 }}>
+        {/* CREATE BUTTONS */}
+        <div style={{ display: "flex", gap: 16, justifyContent: "flex-start" }}>
           <button
             onClick={() => {
               setCreateType("personal");
               setShowCreate(true);
             }}
             style={{
-              flex: 1,
-              padding: "10px 0",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              border: "none",
-              borderRadius: 8,
-              cursor: "pointer",
-              fontSize: 13,
+              ...styles.btn,
+              padding: "10px 16px",
+              fontSize: 14,
+              width: 140,
             }}
           >
             Personal
           </button>
+
           <button
             onClick={() => {
               setCreateType("group");
               setShowCreate(true);
             }}
             style={{
-              flex: 1,
-              padding: "10px 0",
-              backgroundColor: "#17a2b8",
-              color: "#fff",
-              border: "none",
-              borderRadius: 8,
-              cursor: "pointer",
-              fontSize: 13,
+              ...styles.btn,
+              padding: "10px 16px",
+              fontSize: 14,
+              width: 140,
             }}
           >
             Group Sprint
           </button>
         </div>
-
-        {showCreate && (
-          <CreateModal
-            type={createType}
-            onClose={() => setShowCreate(false)}
-            onCreate={(newSprint) => {
-              setSprints((p) => [newSprint, ...p]);
-              setShowCreate(false);
-            }}
-          />
-        )}
       </div>
+
+      {/* CREATE MODAL */}
+      {showCreate && (
+        <CreateModal
+          type={createType}
+          onClose={() => setShowCreate(false)}
+          onCreate={(newSprint) => {
+            setSprints((prev) => [newSprint, ...prev]);
+            setShowCreate(false);
+          }}
+        />
+      )}
     </div>
   );
 }
