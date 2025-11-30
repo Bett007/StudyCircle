@@ -1,4 +1,4 @@
-// ---------- Home Component (wireframe 1) ----------
+// ---------- Home Component ----------
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
@@ -23,116 +23,122 @@ function Home({ sprints, setSprints }) {
   });
 
   return (
-    <div>
-      <div style={styles.controlsRow}>
-        <input
-          placeholder="🔍 Search for sprint room..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          style={styles.search}
-        />
-
-        <div style={styles.filterBox}>
-          <label style={styles.filterLabel}>
-            <input
-              type="checkbox"
-              checked={filters.scheduled}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, scheduled: e.target.checked }))
-              }
-            />{" "}
-            Scheduled
-          </label>
-          <label style={styles.filterLabel}>
-            <input
-              type="checkbox"
-              checked={filters.running}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, running: e.target.checked }))
-              }
-            />{" "}
-            Ongoing
-          </label>
-          <label style={styles.filterLabel}>
-            <input
-              type="checkbox"
-              checked={filters.paused}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, paused: e.target.checked }))
-              }
-            />{" "}
-            Paused
-          </label>
-          <label style={styles.filterLabel}>
-            <input
-              type="checkbox"
-              checked={filters.completed}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, completed: e.target.checked }))
-              }
-            />{" "}
-            Completed
-          </label>
+    <div style={{ display: "flex" }}>
+      {/* ---------- Left Side Container ---------- */}
+      <div style={{ width: 500, marginRight: 24 }}>
+        {/* Search & Filters */}
+        <div style={styles.controlsRow}>
+          <input
+            placeholder="🔍 Search for sprint room..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            style={styles.search}
+          />
+          <div style={styles.filterBox}>
+            <label style={styles.filterLabel}>
+              <input
+                type="checkbox"
+                checked={filters.scheduled}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, scheduled: e.target.checked }))
+                }
+              />{" "}
+              Scheduled
+            </label>
+            <label style={styles.filterLabel}>
+              <input
+                type="checkbox"
+                checked={filters.running}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, running: e.target.checked }))
+                }
+              />{" "}
+              Ongoing
+            </label>
+            <label style={styles.filterLabel}>
+              <input
+                type="checkbox"
+                checked={filters.paused}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, paused: e.target.checked }))
+                }
+              />{" "}
+              Paused
+            </label>
+            <label style={styles.filterLabel}>
+              <input
+                type="checkbox"
+                checked={filters.completed}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, completed: e.target.checked }))
+                }
+              />{" "}
+              Completed
+            </label>
+          </div>
         </div>
+
+        {/* All Rooms Table */}
+        <section style={{ marginTop: 16 }}>
+          <h3>All Rooms</h3>
+          <table style={{ ...styles.table, width: "100%" }}>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Room</th>
+                <th>Owner</th>
+                <th>Status</th>
+                <th>Closing Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((s, idx) => {
+                const status = computeStatusFromDates(s);
+                return (
+                  <tr key={s.id}>
+                    <td>{idx + 1}</td>
+                    <td>
+                      <Link to={`/room/${s.id}`} style={styles.link}>
+                        {s.name}
+                      </Link>
+                    </td>
+                    <td>{s.owner}</td>
+                    <td>{status}</td>
+                    <td>{s.endDate || "—"}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+
+          {/* Buttons under table */}
+          <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+            <button
+              onClick={() => {
+                setCreateType("personal");
+                setShowCreate(true);
+              }}
+              style={styles.btn}
+            >
+              Personal
+            </button>
+            <button
+              onClick={() => {
+                setCreateType("group");
+                setShowCreate(true);
+              }}
+              style={styles.btn}
+            >
+              Group sprint
+            </button>
+          </div>
+        </section>
       </div>
 
-      <section style={{ marginTop: 16 }}>
-        <h3>Rooms</h3>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Room</th>
-              <th>Owner</th>
-              <th>Status</th>
-              <th>Closing Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((s, idx) => {
-              const status = computeStatusFromDates(s);
-              return (
-                <tr key={s.id}>
-                  <td>{idx + 1}</td>
-                  <td>
-                    <Link to={`/room/${s.id}`} style={styles.link}>
-                      {s.name}
-                    </Link>
-                  </td>
-                  <td>{s.owner}</td>
-                  <td>{status}</td>
-                  <td>{s.endDate || "—"}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </section>
+      {/* Optional right side space, if you want */}
+      <div style={{ flex: 1 }}></div>
 
-      <section style={{ marginTop: 20 }}>
-        <h4>Create sprint:</h4>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button
-            onClick={() => {
-              setCreateType("personal");
-              setShowCreate(true);
-            }}
-            style={styles.btn}
-          >
-            Personal
-          </button>
-          <button
-            onClick={() => {
-              setCreateType("group");
-              setShowCreate(true);
-            }}
-            style={styles.btn}
-          >
-            Group sprint
-          </button>
-        </div>
-      </section>
-
+      {/* ---------- Create Modal ---------- */}
       {showCreate && (
         <CreateModal
           type={createType}
