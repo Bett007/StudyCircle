@@ -92,7 +92,7 @@ export default function App() {
         </main>
 
         <footer style={styles.footer}>
-          Built with ❤️ — learning collaboration platform
+          Learning Collaboration Platform
         </footer>
       </div>
     </BrowserRouter>

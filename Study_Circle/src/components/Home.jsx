@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { styles } from "../styles.js";
 import CreateModal from "./Form.jsx";
 import Sprint_room from "./Sprint_room.jsx";
-import { computeStatusFromDates } from "../utils.js";
 
 function Home({ sprints, setSprints }) {
-  const [members, setMembers] = useState([]);
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
     all: true,
@@ -16,49 +14,39 @@ function Home({ sprints, setSprints }) {
   });
   const [showCreate, setShowCreate] = useState(false);
   const [createType, setCreateType] = useState("personal");
-
-  // NEW: state to track currently open sprint
-  const [openSprint, setOpenSprint] = useState(null);
-
-  // ---------- FETCH MEMBERS FROM JSONBIN ----------
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const res = await fetch(
-          "https://api.jsonbin.io/v3/b/692c8bc9ae596e708f7aa204"
-        );
-        const data = await res.json();
-        setMembers(data.record.members || []);
-      } catch (err) {
-        console.error("Failed to fetch members:", err);
-      }
-    };
-    fetchMembers();
-  }, []);
+  const [activeSprint, setActiveSprint] = useState(null);
 
   // ---------- FILTERED SPRINTS ----------
   const filtered = sprints.filter((s) => {
     const matchesQuery = s.name.toLowerCase().includes(query.toLowerCase());
-    const status = computeStatusFromDates(s);
+    const status = s.status || "scheduled";
     if (filters.all) return matchesQuery;
     return matchesQuery && filters[status];
   });
+
+  // ---------- UPDATE SPRINT ----------
+  const updateSprint = (id, updates) => {
+    setSprints((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, ...updates } : s))
+    );
+  };
 
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "flex-start",
-        height: "100vh",
+        height: "80vh",
         overflowY: "auto",
         padding: 20,
         background: "#f7f8fa",
+        position: "relative",
       }}
     >
       {/* LEFT PANEL */}
       <div
         style={{
-          width: 520,
+          width: 800, // wider panel toward center
           background: "#fff",
           padding: 20,
           borderRadius: 14,
@@ -74,21 +62,9 @@ function Home({ sprints, setSprints }) {
             placeholder="🔍 Search for sprint room..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            style={{
-              ...styles.search,
-              fontSize: 15,
-              padding: "8px 10px",
-              flex: 1,
-            }}
+            style={{ ...styles.search, fontSize: 15, padding: "8px 10px", flex: 1 }}
           />
-          <div
-            style={{
-              display: "flex",
-              gap: 6,
-              flexWrap: "wrap",
-              fontSize: 13,
-            }}
-          >
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", fontSize: 13 }}>
             {["all", "scheduled", "running", "paused", "completed"].map((f) => (
               <label key={f} style={{ fontSize: 13, cursor: "pointer" }}>
                 <input
@@ -107,19 +83,13 @@ function Home({ sprints, setSprints }) {
         {/* TABLE */}
         <div
           style={{
-            maxHeight: 220,
+            maxHeight: 400, // scrollable table
             overflowY: "auto",
             border: "1px solid #e0e0e0",
             borderRadius: 10,
           }}
         >
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              fontSize: 15,
-            }}
-          >
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15 }}>
             <thead>
               <tr
                 style={{
@@ -138,71 +108,40 @@ function Home({ sprints, setSprints }) {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((s, idx) => {
-                const status = computeStatusFromDates(s);
-                const owner = members.find((m) => m.id === s.owner);
-                return (
-                  <tr
-                    key={s.id}
-                    style={{
-                      borderBottom: "1px solid #f0f0f0",
-                      height: 42,
-                    }}
-                  >
-                    <td style={{ padding: "10px 8px" }}>{idx + 1}</td>
-                    <td style={{ padding: "10px 8px" }}>
-                      <span
-                        style={{ ...styles.link, cursor: "pointer" }}
-                        onClick={() => setOpenSprint(s)}
-                      >
-                        {s.name}
-                      </span>
-                    </td>
-                    <td style={{ padding: "10px 8px" }}>{owner?.name || "—"}</td>
-                    <td
-                      style={{
-                        padding: "10px 8px",
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      {status}
-                    </td>
-                    <td style={{ padding: "10px 8px" }}>{s.endDate || "—"}</td>
-                  </tr>
-                );
-              })}
+              {filtered.map((s, idx) => (
+                <tr
+                  key={s.id}
+                  style={{ borderBottom: "1px solid #f0f0f0", height: 42, cursor: "pointer" }}
+                  onClick={() => setActiveSprint(s)}
+                >
+                  <td style={{ padding: "10px 8px" }}>{idx + 1}</td>
+                  <td style={{ padding: "10px 8px" }}>{s.name}</td>
+                  <td style={{ padding: "10px 8px" }}>{s.owner}</td>
+                  <td style={{ padding: "10px 8px", textTransform: "capitalize" }}>{s.status}</td>
+                  <td style={{ padding: "10px 8px" }}>{s.endDate || "—"}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
 
         {/* CREATE BUTTONS */}
-        <div style={{ display: "flex", gap: 10 }}>
+        <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
           <button
             onClick={() => {
               setCreateType("personal");
               setShowCreate(true);
             }}
-            style={{
-              ...styles.btn,
-              padding: "8px 14px",
-              fontSize: 14,
-              width: 140,
-            }}
+            style={{ ...styles.btn, padding: "8px 14px", fontSize: 14, width: 140 }}
           >
             Personal
           </button>
-
           <button
             onClick={() => {
               setCreateType("group");
               setShowCreate(true);
             }}
-            style={{
-              ...styles.btn,
-              padding: "8px 14px",
-              fontSize: 14,
-              width: 140,
-            }}
+            style={{ ...styles.btn, padding: "8px 14px", fontSize: 14, width: 140 }}
           >
             Group Sprint
           </button>
@@ -221,19 +160,13 @@ function Home({ sprints, setSprints }) {
         />
       )}
 
-      {/* ---------- SPRINT ROOM MODAL ---------- */}
-      {openSprint && (
+      {/* SPRINTROOM MODAL */}
+      {activeSprint && (
         <Sprint_room
-          sprint={openSprint}
-          members={members}
-          updateSprint={(updates) => {
-            setSprints((prev) =>
-              prev.map((sp) =>
-                sp.id === openSprint.id ? { ...sp, ...updates } : sp
-              )
-            );
-          }}
-          onClose={() => setOpenSprint(null)}
+          sprint={activeSprint}
+          members={[]}
+          updateSprint={updateSprint}
+          onClose={() => setActiveSprint(null)}
         />
       )}
     </div>
