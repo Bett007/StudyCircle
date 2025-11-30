@@ -9,29 +9,26 @@ function Sprint_room({ sprints, updateSprint }) {
   const navigate = useNavigate();
   const sprint = sprints.find((s) => s.id === id);
 
-  const [showPomodoro, setShowPomodoro] = useState(true);
-  const [secondsLeft, setSecondsLeft] = useState(25 * 60);
-  const [running, setRunning] = useState(true);
+  const [showPomodoro, setShowPomodoro] = useState(false);
+  const [secondsElapsed, setSecondsElapsed] = useState(0);
+  const [running, setRunning] = useState(false);
   const timerRef = useRef(null);
 
   if (!sprint) return <div style={{ padding: 20 }}>Sprint not found</div>;
 
-  const status = computeStatusFromDates(sprint);
+  // Initialize local timer state from sprint data
+  useEffect(() => {
+    setSecondsElapsed(sprint.secondsElapsed || 0);
+    setRunning(sprint.status === "running");
+  }, [sprint]);
 
-  // Timer auto-start
+  // Timer counts up
   useEffect(() => {
     if (running) {
       timerRef.current = setInterval(() => {
-        setSecondsLeft((s) => {
-          const newS = s - 1;
-          if (newS <= 0) {
-            setRunning(false);
-            return 0;
-          }
-          return newS;
-        });
+        setSecondsElapsed((s) => s + 1);
       }, 1000);
-    } else if (timerRef.current) {
+    } else {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
@@ -40,19 +37,31 @@ function Sprint_room({ sprints, updateSprint }) {
 
   const pauseSprint = () => {
     setRunning(false);
-    updateSprint(sprint.id, { status: "paused" });
+    // Save status and elapsed time only when paused
+    updateSprint(sprint.id, { status: "paused", secondsElapsed });
+  };
+
+  const resumeSprint = () => {
+    setRunning(true);
+    updateSprint(sprint.id, { status: "running" });
   };
 
   const confirmClose = () => {
     if (window.confirm("Close this sprint? This will mark it as completed.")) {
       setRunning(false);
-      updateSprint(sprint.id, { status: "completed", endDate: todayIso() });
+      updateSprint(sprint.id, {
+        status: "completed",
+        endDate: todayIso(),
+        secondsElapsed,
+      });
       navigate("/");
     }
   };
 
-  const mm = String(Math.floor(secondsLeft / 60)).padStart(2, "0");
-  const ss = String(secondsLeft % 60).padStart(2, "0");
+  const openPomodoro = () => setShowPomodoro(true);
+
+  const mm = String(Math.floor(secondsElapsed / 60)).padStart(2, "0");
+  const ss = String(secondsElapsed % 60).padStart(2, "0");
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 16 }}>
@@ -86,10 +95,14 @@ function Sprint_room({ sprints, updateSprint }) {
 
         <div style={{ marginTop: 20, display: "flex", gap: 8 }}>
           <button onClick={confirmClose} style={styles.dangerBtn}>Close Sprint</button>
-          <button onClick={pauseSprint} style={styles.btn}>Pause</button>
-          <button onClick={() => setShowPomodoro(!showPomodoro)} style={styles.btn}>
-            Pomodoro
-          </button>
+
+          {running ? (
+            <button onClick={pauseSprint} style={styles.btn}>Pause</button>
+          ) : (
+            <button onClick={resumeSprint} style={styles.btn}>Resume</button>
+          )}
+
+          <button onClick={openPomodoro} style={styles.btn}>Pomodoro</button>
         </div>
       </div>
 
@@ -98,7 +111,7 @@ function Sprint_room({ sprints, updateSprint }) {
         <div style={{ fontSize: 28, textAlign: "center" }}>{mm}:{ss}</div>
         <div style={{ marginTop: 12 }}>
           <h5>Quick Info</h5>
-          <div>Status: {status}</div>
+          <div>Status: {sprint.status}</div>
           <div>Closing Date: {sprint.endDate || "—"}</div>
         </div>
         <div style={{ marginTop: 12 }}>
@@ -110,8 +123,8 @@ function Sprint_room({ sprints, updateSprint }) {
       {showPomodoro && (
         <PomodoroModal
           onClose={() => setShowPomodoro(false)}
-          secondsLeft={secondsLeft}
-          setSecondsLeft={setSecondsLeft}
+          secondsLeft={secondsElapsed}
+          setSecondsLeft={setSecondsElapsed}
           running={running}
           setRunning={setRunning}
         />
