@@ -123,3 +123,207 @@
   border-radius: 20px;
   font-size: 13px;
 }
+
+/* Progress Feed Styles */
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f7f8fa;
+  min-height: 100vh;
+}
+
+.feed-column {
+  flex: 1;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.title-divider {
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, #007bff, #28a745);
+  margin: 10px 0 20px 0;
+}
+
+.post-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.post-form input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.post-form button {
+  padding: 12px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.post-form button:hover {
+  background: #0056b3;
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.message-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #007bff;
+}
+
+.message-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.message-content {
+  flex: 1;
+}
+
+.message-text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #333;
+}
+
+.message-timestamp {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.inspiration-sidebar {
+  width: 250px;
+  position: sticky;
+  top: 20px;
+}
+
+.quote-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.quote-text {
+  font-size: 16px;
+  font-style: italic;
+  color: #333;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.quote-author {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 15px 0;
+}
+
+.quote-dots {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ddd;
+  transition: background 0.3s;
+}
+
+.dot.active {
+  background: #007bff;
+}
+
+.dark-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: #333;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
+
+.dark-toggle:hover {
+  transform: scale(1.1);
+}
+
+/* Dark mode */
+body.dark {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark .App {
+  background: #121212;
+}
+
+body.dark .feed-column,
+body.dark .quote-card {
+  background: #1e1e1e;
+  color: #e0e0e0;
+}
+
+body.dark .post-form input,
+body.dark .post-form button {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #444;
+}
+
+body.dark .message-item {
+  background: #2a2a2a;
+  border-left-color: #007bff;
+}
+
+body.dark .message-text {
+  color: #e0e0e0;
+}
+
+body.dark .message-timestamp {
+  color: #bbb;
+}
+
+body.dark .dark-toggle {
+  background: #f7f8fa;
+  color: #333;
+}
