@@ -62,12 +62,20 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div style={styles.container}>
-        <header style={styles.header}>
-          <h1 style={{ margin: 0 }}>Moringa School</h1>
+      <div
+        style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
+      >
+        <header
+          style={{
+            backgroundColor: "#f0f0f0",
+            padding: 16,
+            borderBottom: "1px solid #ccc",
+          }}
+        >
+          <h1>Moringa School</h1>
         </header>
 
-        <main style={styles.main}>
+        <main style={{ flex: 1, padding: 16 }}>
           <Routes>
             <Route
               path="/"
@@ -82,7 +90,14 @@ export default function App() {
           </Routes>
         </main>
 
-        <footer style={styles.footer}>
+        <footer
+          style={{
+            backgroundColor: "#f0f0f0",
+            padding: 16,
+            borderTop: "1px solid #ccc",
+            textAlign: "center",
+          }}
+        >
           Built with ❤️ — learning collaboration platform
         </footer>
       </div>
