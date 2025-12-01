@@ -1,3 +1,4 @@
+// src/components/App.jsx
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
@@ -59,10 +60,15 @@ export default function App() {
     );
   };
 
+  // Use Vite's base URL so routes work when deployed under a subpath (e.g. GitHub Pages)
+  const basename = import.meta.env.BASE_URL || "/";
+
   return (
-    <BrowserRouter basename="/StudyCircle">
+    <BrowserRouter basename={basename}>
       <div className="container">
-        <header className="header">...</header>
+        <header className="header">
+          <h1 style={{ margin: 0 }}>Moringa School</h1>
+        </header>
 
         <main className="main">
           <Routes>
@@ -76,10 +82,17 @@ export default function App() {
                 <SprintRoom sprints={sprints} updateSprint={updateSprint} />
               }
             />
+            {/* fallback: render Home for any unmatched route (helps on static hosts) */}
+            <Route
+              path="*"
+              element={<Home sprints={sprints} setSprints={setSprints} />}
+            />
           </Routes>
         </main>
 
-        <footer className="footer">...</footer>
+        <footer className="footer">
+          Built with ❤️ — learning collaboration platform
+        </footer>
       </div>
     </BrowserRouter>
   );
