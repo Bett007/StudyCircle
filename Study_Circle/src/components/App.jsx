@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
-import { styles } from "../styles.js";
 import Home from "./Home.jsx";
 import SprintRoom from "./Sprint_room.jsx";
 
@@ -61,21 +60,11 @@ export default function App() {
   };
 
   return (
-    <BrowserRouter>
-      <div
-        style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
-      >
-        <header
-          style={{
-            backgroundColor: "#f0f0f0",
-            padding: 16,
-            borderBottom: "1px solid #ccc",
-          }}
-        >
-          <h1>Moringa School</h1>
-        </header>
+    <BrowserRouter basename="/StudyCircle">
+      <div className="container">
+        <header className="header">...</header>
 
-        <main style={{ flex: 1, padding: 16 }}>
+        <main className="main">
           <Routes>
             <Route
               path="/"
@@ -90,16 +79,7 @@ export default function App() {
           </Routes>
         </main>
 
-        <footer
-          style={{
-            backgroundColor: "#f0f0f0",
-            padding: 16,
-            borderTop: "1px solid #ccc",
-            textAlign: "center",
-          }}
-        >
-          Built with ❤️ — learning collaboration platform
-        </footer>
+        <footer className="footer">...</footer>
       </div>
     </BrowserRouter>
   );

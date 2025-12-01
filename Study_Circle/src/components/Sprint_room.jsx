@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { computeStatusFromDates, todayIso } from "../utils.js";
-import { styles } from "../styles.js";
 import PomodoroModal from "./Pomodoro.jsx";
 
 function SprintRoom({ sprints, updateSprint }) {
@@ -37,7 +36,7 @@ function SprintRoom({ sprints, updateSprint }) {
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 16 }}>
-      <div style={styles.card}>
+      <div className="card">
         <h2>{sprint.name}</h2>
         <div>
           <strong>By:</strong> {sprint.owner}
@@ -55,7 +54,7 @@ function SprintRoom({ sprints, updateSprint }) {
           <h4>Members</h4>
           <div style={{ display: "flex", gap: 8 }}>
             {sprint.members.map((m) => (
-              <span key={m} style={styles.pill}>
+              <span key={m} className="pill">
                 {m}
               </span>
             ))}
@@ -72,19 +71,19 @@ function SprintRoom({ sprints, updateSprint }) {
         </section>
 
         <div style={{ marginTop: 20, display: "flex", gap: 8 }}>
-          <button onClick={confirmClose} style={styles.dangerBtn}>
+          <button onClick={confirmClose} className="dangerBtn">
             Close sprint
           </button>
-          <button onClick={pauseSprint} style={styles.btn}>
+          <button onClick={pauseSprint} className="btn">
             Pause
           </button>
-          <button onClick={() => setShowPomodoro(true)} style={styles.btn}>
+          <button onClick={() => setShowPomodoro(true)} className="btn">
             Pomodoro
           </button>
         </div>
       </div>
 
-      <aside style={styles.card}>
+      <aside className="card">
         <h4>Session timer</h4>
         <div style={{ fontSize: 28, textAlign: "center" }}>00:00</div>
 
@@ -96,7 +95,7 @@ function SprintRoom({ sprints, updateSprint }) {
 
         <div style={{ marginTop: 12 }}>
           <h5>Actions</h5>
-          <Link to="/" style={styles.link}>
+          <Link to="/" className="link">
             Back to home
           </Link>
         </div>

@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
-import { styles } from "../styles.js";
 import CreateModal from "./Form.jsx";
 
 function Home({ sprints, setSprints }) {
@@ -24,16 +23,16 @@ function Home({ sprints, setSprints }) {
 
   return (
     <div>
-      <div style={styles.controlsRow}>
+      <div className="controlsRow">
         <input
           placeholder="🔍 Search for sprint room..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          style={styles.search}
+          className="search"
         />
 
-        <div style={styles.filterBox}>
-          <label style={styles.filterLabel}>
+        <div className="filterBox">
+          <label className="filterLabel">
             <input
               type="checkbox"
               checked={filters.scheduled}
@@ -43,7 +42,7 @@ function Home({ sprints, setSprints }) {
             />{" "}
             Scheduled
           </label>
-          <label style={styles.filterLabel}>
+          <label className="filterLabel">
             <input
               type="checkbox"
               checked={filters.running}
@@ -53,7 +52,7 @@ function Home({ sprints, setSprints }) {
             />{" "}
             Ongoing
           </label>
-          <label style={styles.filterLabel}>
+          <label className="filterLabel">
             <input
               type="checkbox"
               checked={filters.paused}
@@ -63,7 +62,7 @@ function Home({ sprints, setSprints }) {
             />{" "}
             Paused
           </label>
-          <label style={styles.filterLabel}>
+          <label className="filterLabel">
             <input
               type="checkbox"
               checked={filters.completed}
@@ -78,7 +77,7 @@ function Home({ sprints, setSprints }) {
 
       <section style={{ marginTop: 16 }}>
         <h3>Rooms</h3>
-        <table style={styles.table}>
+        <table className="table">
           <thead>
             <tr>
               <th>#</th>
@@ -95,7 +94,7 @@ function Home({ sprints, setSprints }) {
                 <tr key={s.id}>
                   <td>{idx + 1}</td>
                   <td>
-                    <Link to={`/room/${s.id}`} style={styles.link}>
+                    <Link to={`/room/${s.id}`} className="link">
                       {s.name}
                     </Link>
                   </td>
@@ -117,7 +116,7 @@ function Home({ sprints, setSprints }) {
               setCreateType("personal");
               setShowCreate(true);
             }}
-            style={styles.btn}
+            className="btn"
           >
             Personal
           </button>
@@ -126,7 +125,7 @@ function Home({ sprints, setSprints }) {
               setCreateType("group");
               setShowCreate(true);
             }}
-            style={styles.btn}
+            className="btn"
           >
             Group sprint
           </button>

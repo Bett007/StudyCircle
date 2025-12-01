@@ -1,7 +1,6 @@
 // ---------- Create Modal (form) ----------
 import React, { useState } from "react";
 import { uid, todayIso, computeStatusFromDates } from "../utils.js";
-import { styles } from "../styles.js";
 
 export default function CreateModal({ type = "personal", onClose, onCreate }) {
   const [name, setName] = useState("");
@@ -48,14 +47,14 @@ export default function CreateModal({ type = "personal", onClose, onCreate }) {
   };
 
   return (
-    <div style={styles.modalOverlay}>
-      <div style={styles.modal}>
+    <div className="modalOverlay">
+      <div className="modal">
         <h3>Create {type} sprint</h3>
-        <div style={styles.field}>
+        <div className="field">
           <label>Sprint name</label>
           <input value={name} onChange={(e) => setName(e.target.value)} />
         </div>
-        <div style={styles.field}>
+        <div className="field">
           <label>Start date</label>
           <input
             type="date"
@@ -63,7 +62,7 @@ export default function CreateModal({ type = "personal", onClose, onCreate }) {
             onChange={(e) => setStartDate(e.target.value)}
           />
         </div>
-        <div style={styles.field}>
+        <div className="field">
           <label>End date</label>
           <input
             type="date"
@@ -71,7 +70,7 @@ export default function CreateModal({ type = "personal", onClose, onCreate }) {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
-        <div style={styles.field}>
+        <div className="field">
           <label>Description (max 300)</label>
           <textarea
             value={description}
@@ -79,14 +78,14 @@ export default function CreateModal({ type = "personal", onClose, onCreate }) {
             rows={4}
           />
         </div>
-        <div style={styles.field}>
+        <div className="field">
           <label>Members (comma separated emails/usernames)</label>
           <input
             value={membersText}
             onChange={(e) => setMembersText(e.target.value)}
           />
         </div>
-        <div style={styles.field}>
+        <div className="field">
           <label>
             Tasks (one per line){type === "group" ? " — at least 2" : ""}
           </label>
@@ -100,10 +99,10 @@ export default function CreateModal({ type = "personal", onClose, onCreate }) {
         {error && <div style={{ color: "crimson" }}>{error}</div>}
 
         <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-          <button onClick={validateAndCreate} style={styles.btn}>
+          <button onClick={validateAndCreate} className="btn">
             Create
           </button>
-          <button onClick={onClose} style={styles.btnSecondary}>
+          <button onClick={onClose} className="btnSecondary">
             Cancel
           </button>
         </div>

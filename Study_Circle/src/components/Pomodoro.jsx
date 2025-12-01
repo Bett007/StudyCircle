@@ -1,6 +1,5 @@
 // ---------- Pomodoro Modal (wireframe 3) ----------
 import React, { useState, useEffect, useRef } from "react";
-import { styles } from "../styles.js";
 
 function PomodoroModal({ onClose }) {
   const [secondsLeft, setSecondsLeft] = useState(25 * 60);
@@ -42,8 +41,8 @@ function PomodoroModal({ onClose }) {
   const ss = String(secondsLeft % 60).padStart(2, "0");
 
   return (
-    <div style={styles.modalOverlay}>
-      <div style={{ ...styles.modal, width: 760, display: "flex", gap: 12 }}>
+    <div className="modalOverlay">
+      <div style={{ width: 760, display: "flex", gap: 12 }} className="modal">
         <div style={{ flex: 1 }}>
           <h3>Pomodoro</h3>
           <div style={{ fontSize: 48, textAlign: "center" }}>
@@ -57,16 +56,16 @@ function PomodoroModal({ onClose }) {
               marginTop: 12,
             }}
           >
-            <button onClick={start} style={styles.btn}>
+            <button onClick={start} className="btn">
               Start
             </button>
-            <button onClick={pause} style={styles.btnSecondary}>
+            <button onClick={pause} className="btnSecondary">
               Pause
             </button>
-            <button onClick={stop} style={styles.dangerBtn}>
+            <button onClick={stop} className="dangerBtn">
               Stop
             </button>
-            <button onClick={onClose} style={styles.btn}>
+            <button onClick={onClose} className="btn">
               Close
             </button>
           </div>

@@ -1,4 +1,7 @@
-- [ ] Fix App.jsx: Remove setState in useEffect by computing statuses in useState initializer
-- [ ] Fix Pomodoro.jsx: Move timer stop logic to interval callback to avoid setState in useEffect
-- [ ] Fix Home.jsx: Remove unused updateSprint prop
-- [ ] Fix Form.jsx: Change to named export and update import in Home.jsx
+# TODO: Fix Styles to Use index.css
+
+- [x] Update App.jsx to use className instead of style={styles.xxx}
+- [x] Update Home.jsx: remove import of styles, change style to className
+- [x] Update Form.jsx: remove import of styles, change style to className
+- [x] Update Sprint_room.jsx: remove import of styles, change style to className
+- [x] Update Pomodoro.jsx: remove import of styles, change style to className
