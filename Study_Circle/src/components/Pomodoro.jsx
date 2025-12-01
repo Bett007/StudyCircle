@@ -1,5 +1,5 @@
-// ---------- Pomodoro Modal (wireframe 3) ----------
 import React, { useState, useEffect, useRef } from "react";
+import { styles } from "../styles.js";
 
 function PomodoroModal({ onClose }) {
   const [secondsLeft, setSecondsLeft] = useState(25 * 60);
@@ -23,9 +23,7 @@ function PomodoroModal({ onClose }) {
       timerRef.current = null;
     }
 
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+    return () => clearInterval(timerRef.current);
   }, [running]);
 
   const start = () => {
@@ -41,40 +39,46 @@ function PomodoroModal({ onClose }) {
   const ss = String(secondsLeft % 60).padStart(2, "0");
 
   return (
-    <div className="modalOverlay">
-      <div style={{ width: 760, display: "flex", gap: 12 }} className="modal">
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background: "rgba(0,0,0,0.5)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1000, // ABOVE Sprint_room overlay
+      }}
+    >
+      <div
+        style={{
+          background: "rgba(53, 53, 53, 1)",
+          color: "#fff",
+          borderRadius: 12,
+          padding: 20,
+          width: 760,
+          maxWidth: "90%",
+          display: "flex",
+          gap: 12,
+        }}
+      >
         <div style={{ flex: 1 }}>
           <h3>Pomodoro</h3>
-          <div style={{ fontSize: 48, textAlign: "center" }}>
-            {mm}:{ss}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              justifyContent: "center",
-              marginTop: 12,
-            }}
-          >
-            <button onClick={start} className="btn">
-              Start
-            </button>
-            <button onClick={pause} className="btnSecondary">
-              Pause
-            </button>
-            <button onClick={stop} className="dangerBtn">
-              Stop
-            </button>
-            <button onClick={onClose} className="btn">
-              Close
-            </button>
+          <div style={{ fontSize: 48, textAlign: "center" }}>{mm}:{ss}</div>
+          <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 12 }}>
+            <button onClick={start} style={styles.btn}>Start</button>
+            <button onClick={pause} style={styles.btnSecondary}>Pause</button>
+            <button onClick={stop} style={styles.dangerBtn}>Stop</button>
+            <button onClick={onClose} style={styles.btn}>Close</button>
           </div>
         </div>
 
-        <div style={{ width: 320 }}>
-          <h4>Spotify (mini)</h4>
-          {/* Replace the src with a valid Spotify embed url or your own player. */}
-          <div style={{ border: "1px solid #ddd", height: 200 }}>
+        <div style={{ width: 320, }}>
+          <h4>Spotify</h4>
+          <div style={{ border: "1px solid rgba(53, 53, 53, 1)", height: 155}}>
             <iframe
               title="spotify-player"
               style={{ width: "100%", height: "100%", border: 0 }}
