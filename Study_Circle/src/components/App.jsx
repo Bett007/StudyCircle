@@ -48,7 +48,7 @@ const initialSprints = [
     startDate: "2024-12-25",
     endDate: "2024-12-26",
     status: "scheduled",
-    members: ["3"],
+    members: ["4"],
     tasks: ["Read docs", "Build small app"],
   },
    {
@@ -59,7 +59,7 @@ const initialSprints = [
     startDate: "2024-12-25",
     endDate: "2024-12-26",
     status: "paused",
-    members: ["4"],
+    members: ["5"],
     tasks: ["Read docs", "Build small app"],
   },
 ];
