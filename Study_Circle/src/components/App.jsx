@@ -5,7 +5,7 @@ import { styles } from "../styles.js";
 import Home from "./Home.jsx";
 import SprintRoom from "./Sprint_room.jsx";
 
-// ---------- Mock DB (you can also move this to db.json) ----------
+// ---------- Mock DB ----------
 const initialSprints = [
   {
     id: "1",
