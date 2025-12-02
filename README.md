@@ -16,16 +16,6 @@
 - Post study updates
 - Share feedback
 
-### 3. SOS 
-#### A dedicated help section that allows students to:
-- Request support when stuck
-- Receive help from students
-
-### 4. Measurement Hooks
-#### Tracking tools that measure:
-- Productivity patterns
-- Self and Mood Check-Ins
-
 ### Future Implementation
 1. Availability/Matchmaking Feature.
 2. Login Feature for students to access Dashboard and Features
@@ -57,7 +47,7 @@
 2. SOS Button for Help
 3. Login Feature for students to access the dashboard
 4. Customised Profile Pictures
-5. Measurement Hooks for Self Checkin and App Feedback
+5. Measurement Hooks for Self Checki-n and App Feedback
 
 ## Folder Structure
 
@@ -71,8 +61,7 @@
  └── assets
 
  ## Live Demo
-
-`https://study-circle-git-dev-betts-projects-57f0fd05.vercel.app/`
+[https://study-circle-six.vercel.app/]
 
 ## Contributors
 
@@ -83,5 +72,3 @@
 3. Martin Mwabali
 4. Miguel Gicheru
 5. Taran Chase
-6. Miguel Gicheru
-7. Taran Chase
