@@ -1,72 +1,37 @@
-// src/App.jsx
 
-import React, { useState, useEffect } from 'react';
-import OverwhelmSurvey from './components/forms/OverwhelmSurvey'; // <<< Importing Step 2
+// src/App.jsx (UPDATED FOR CARD/BOX INTEGRATION)
+
+import React from 'react';
+import OverwhelmSurvey from './components/forms/OverwhelmSurvey';
 
 function App() {
-  // State for controlling the visibility of the survey and error messages
-  const [showSurvey, setShowSurvey] = useState(false);
-  const [apiError, setApiError] = useState(null);
+    // NOTE: Removed state logic (showSurvey, apiError) as the component is now self-contained.
 
-  // Logic: Check if the user has submitted the baseline score for this session/period
-  useEffect(() => {
-    // We use sessionStorage here as a simple placeholder for checking submission status.
-    const hasSubmittedBaseline = sessionStorage.getItem('baselineScoreSubmitted'); 
+    return (
+        <div className="App" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            <header style={{ padding: '20px', backgroundColor: '#f0f0f0', textAlign: 'center' }}>
+                <h1>StudyCircle Dashboard</h1>
+            </header>
 
-    if (!hasSubmittedBaseline) {
-      // Show the survey modal on initial load if not submitted
-      setShowSurvey(true);
-    }
-    // NOTE: If you later implement a system for checking every week, you'll change this logic!
-  }, []);
+            <div style={{ display: 'flex', flex: 1, padding: '20px', gap: '20px' }}>
+                
+                {/* 5. MEASUREMENT HOOKS BOX (Sidebar/Fixed Location) */}
+                <div style={{ width: '280px', flexShrink: 0 }}>
+                    <OverwhelmSurvey />
+                    {/* Other static sidebar content can go here */}
+                </div>
 
-  const handleSurveyComplete = () => {
-    // Fired on successful API submission
-    setShowSurvey(false);
-    sessionStorage.setItem('baselineScoreSubmitted', 'true'); 
-    setApiError(null);
-    console.log("Survey successfully recorded. Main features now visible.");
-  };
-
-  const handleSurveyError = (errorMessage) => {
-      // Fired if the API call fails
-      setApiError(`Submission failed: ${errorMessage}. Please try again.`);
-      console.error(errorMessage);
-  }
-
-  return (
-    <div className="App">
-      <header style={{ padding: '20px', backgroundColor: '#f0f0f0', textAlign: 'center' }}>
-        <h1>StudyCircle Dashboard (Feature 5 Integration Test)</h1>
-        <p>Your team's features (1-4) will appear here once the survey is completed.</p>
-      </header>
-
-      <main style={{ padding: '20px', minHeight: '500px' }}>
-        {/* All the main MVP features (Matching, Sprints, Feed) go here */}
-        {!showSurvey && (
-          <div style={{ border: '1px dashed green', padding: '20px' }}>
-            <h2>Main StudyCircle Features (Visible Now)</h2>
-            <p>This space will be filled by the components built by your teammates (Features 1-4).</p>
-          </div>
-        )}
-      </main>
-
-      {/* 5. Measurement Hooks: The Overwhelm Survey Renderer */}
-      {showSurvey && (
-        <OverwhelmSurvey 
-          onComplete={handleSurveyComplete} 
-          onError={handleSurveyError}
-        />
-      )}
-
-      {/* Display any API error */}
-      {apiError && (
-        <div style={{ color: 'white', backgroundColor: 'red', padding: '10px', textAlign: 'center' }}>
-            {apiError}
+                {/* MAIN CONTENT AREA (Features 1-4) */}
+                <main style={{ flexGrow: 1, padding: '10px', border: '1px solid #ccc', borderRadius: '8px' }}>
+                    <h2>Main StudyCircle Features</h2>
+                    <p>This area contains the Availability Matcher, Sprint Rooms, and SOS Channel.</p>
+                    <div style={{ height: '500px', backgroundColor: '#fff' }}>
+                        {/* Placeholder for Features 1-4 */}
+                    </div>
+                </main>
+            </div>
         </div>
-      )}
-    </div>
-  );
+    );
 }
 
 export default App;
