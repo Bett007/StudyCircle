@@ -129,7 +129,7 @@
 /* Progress Feed Styles */
 .App {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
   padding: 20px;
