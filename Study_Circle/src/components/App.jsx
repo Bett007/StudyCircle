@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
 import Home from "./Home.jsx";
 import Sprint_room from "./Sprint_room.jsx";
-import ProgressFeed from "./ProgressFeed.jsx";
 
 // ---------- Mock DB ----------
 const initialSprints = [

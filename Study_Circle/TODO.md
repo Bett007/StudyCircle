@@ -1,7 +1,4 @@
-# TODO: Fix Styles to Use index.css
+# TODO: Move Progress Feed to Home Dashboard
 
-- [x] Update App.jsx to use className instead of style={styles.xxx}
-- [x] Update Home.jsx: remove import of styles, change style to className
-- [x] Update Form.jsx: remove import of styles, change style to className
-- [x] Update Sprint_room.jsx: remove import of styles, change style to className
-- [x] Update Pomodoro.jsx: remove import of styles, change style to className
+- [x] Edit Home.jsx: Import ProgressFeed component and add it as a right panel in the flex layout next to the existing left panel.
+- [x] Edit App.jsx: Remove the '/progress' route from the Routes.

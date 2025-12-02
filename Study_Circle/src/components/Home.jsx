@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { styles } from "../styles.js";
 import CreateModal from "./Form.jsx";
 import Sprint_room from "./Sprint_room.jsx";
+import ProgressFeed from "./ProgressFeed.jsx";
 
 function Home({ sprints, setSprints }) {
   const [query, setQuery] = useState("");
@@ -182,6 +183,22 @@ function Home({ sprints, setSprints }) {
           }}
         />
       )}
+
+      {/* RIGHT PANEL - PROGRESS FEED */}
+      <div
+        style={{
+          flex: 1,
+          marginLeft: 20,
+          background: "#fff",
+          padding: 20,
+          borderRadius: 14,
+          boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <ProgressFeed />
+      </div>
 
       {/* SPRINTROOM MODAL */}
       {activeSprint && (
