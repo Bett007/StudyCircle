@@ -52,11 +52,12 @@
 4.Build for Production
 `npm run build`
 
-## Future Implemetations
+## Future Implementations
 1. Availability/Matchmaking Feature
 2. SOS Button for Help
 3. Login Feature for students to access the dashboard
 4. Customised Profile Pictures
+5. Measurement Hooks for Self Checkin and App Feedback
 
 ## Folder Structure
 
@@ -71,7 +72,7 @@
 
  ## Live Demo
 
-`https://<your-vercel-deployment-url>`
+`https://study-circle-git-dev-betts-projects-57f0fd05.vercel.app/`
 
 ## Contributors
 
