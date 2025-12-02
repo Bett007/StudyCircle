@@ -139,7 +139,6 @@ export default function App() {
                 />
               }
             />
-            <Route path="/progress" element={<ProgressFeed />} />
           </Routes>
         </main>
 

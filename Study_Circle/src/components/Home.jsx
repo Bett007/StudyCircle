@@ -34,6 +34,7 @@ function Home({ sprints, setSprints }) {
 
   return (
     <div
+      className="home-container"
       style={{
         display: "flex",
         justifyContent: "flex-start",
@@ -46,6 +47,7 @@ function Home({ sprints, setSprints }) {
     >
       {/* LEFT PANEL */}
       <div
+        className="sprint-room-panel"
         style={{
           width: 800, // wider panel toward center
           background: "#fff",
@@ -186,6 +188,7 @@ function Home({ sprints, setSprints }) {
 
       {/* RIGHT PANEL - PROGRESS FEED */}
       <div
+        className="progress-feed-panel"
         style={{
           flex: 1,
           marginLeft: 20,
