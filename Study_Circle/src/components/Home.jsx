@@ -190,8 +190,6 @@ function Home({ sprints, setSprints }) {
       <div
         className="progress-feed-panel"
         style={{
-          flex: 1,
-          marginLeft: 20,
           background: "#fff",
           padding: 20,
           borderRadius: 14,
