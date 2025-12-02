@@ -1,96 +1,98 @@
-// src/components/forms/OverwhelmSurvey.jsx
+// src/components/forms/OverwhelmSurvey.jsx (UPDATED FOR CARD/BOX VIEW)
 
 import React, { useState } from 'react';
-import { submitOverwhelmScore } from '../../services/api'; // <<< Importing Step 1
+import { submitOverwhelmScore } from '../../services/api';
 
-// Simplified inline styles for demonstration purposes
 const styles = {
-    modal: {
-        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex',
-        justifyContent: 'center', alignItems: 'center', zIndex: 1000,
+    card: {
+        // This is the box styling: fixed size, visible border/shadow
+        padding: '15px', border: '1px solid #ddd', borderRadius: '8px',
+        backgroundColor: '#f9f9f9', margin: '0 0 20px 0', boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+        minWidth: '250px' // Ensure it looks like a box
     },
-    content: {
-        backgroundColor: 'white', padding: '30px', borderRadius: '12px',
-        maxWidth: '450px', width: '90%', boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
-        textAlign: 'center'
+    prompt: {
+        fontSize: '1em', marginBottom: '10px', fontWeight: '500'
     },
-    button: (selected) => ({
-        flex: 1, margin: '5px', padding: '10px 5px', minWidth: '70px',
+    buttonContainer: {
+        display: 'flex', justifyContent: 'space-between', marginBottom: '15px'
+    },
+    scoreButton: (selected) => ({
+        flex: 1, margin: '2px', padding: '8px 0', 
         border: `2px solid ${selected ? '#007bff' : '#ccc'}`,
-        borderRadius: '8px', cursor: 'pointer', backgroundColor: selected ? '#e9f5ff' : 'white',
-        transition: 'all 0.2s', fontSize: '14px'
+        borderRadius: '4px', cursor: 'pointer', backgroundColor: selected ? '#e9f5ff' : 'white',
+        fontSize: '0.9em'
     }),
     submitBtn: { 
-        padding: '10px 25px', backgroundColor: '#28a745', color: 'white', 
-        border: 'none', borderRadius: '6px', cursor: 'pointer', marginTop: '20px' 
+        width: '100%', padding: '8px', backgroundColor: '#28a745', color: 'white', 
+        border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '1em'
+    },
+    successMessage: {
+        color: 'green', fontWeight: 'bold', textAlign: 'center'
     }
 };
 
-const OverwhelmSurvey = ({ onComplete, onError }) => {
+const OverwhelmSurvey = ({ onComplete }) => {
     const [selectedScore, setSelectedScore] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false); // New state to track if submitted today
     const scores = [1, 2, 3, 4, 5];
 
-    const getDescription = (score) => {
-        switch(score) {
-            case 1: return "Calm";
-            case 2: return "Fine";
-            case 3: return "Pressure";
-            case 4: return "High Load";
-            case 5: return "Burnout";
-            default: return "";
+    // Check if score has been submitted recently (e.g., in the last 24 hours)
+    useEffect(() => {
+        const lastSubmitted = sessionStorage.getItem('lastOverwhelmSubmit');
+        // Simple check: if a score was submitted in the last 86400000 ms (24 hours)
+        if (lastSubmitted && (Date.now() - parseInt(lastSubmitted) < 86400000)) {
+            setSubmitted(true);
         }
-    };
+    }, []);
 
     const handleSubmit = async () => {
         if (selectedScore === null) return;
-        
         setLoading(true);
         try {
-            // Call the function from Step 1
             await submitOverwhelmScore(selectedScore); 
-            onComplete(); 
+            sessionStorage.setItem('lastOverwhelmSubmit', Date.now()); // Record timestamp
+            setSubmitted(true); // Show success view
+            if (onComplete) onComplete(); 
         } catch (error) {
-            onError(error.message); 
+            alert(`Error submitting score: ${error.message}`);
         } finally {
             setLoading(false);
         }
     };
 
-    return (
-        <div style={styles.modal}>
-            <div style={styles.content}>
-                <h3>Self-Reported Overwhelm Check 🧠</h3>
-                <p>How overwhelmed or burned out do you feel right now? (1 = Calm, 5 = Burnout)</p>
-                
-                <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
-                    {scores.map(score => (
-                        <div 
-                            key={score} 
-                            style={styles.button(selectedScore === score)} 
-                            onClick={() => setSelectedScore(score)}
-                        >
-                            <div style={{ fontWeight: 'bold', fontSize: '1.4em' }}>{score}</div>
-                            <small>{getDescription(score)}</small>
-                        </div>
-                    ))}
-                </div>
-
-                {selectedScore !== null && (
-                    <p style={{ color: '#007bff', fontWeight: 'bold' }}>
-                        Selected: {selectedScore} - {getDescription(selectedScore)}
-                    </p>
-                )}
-
-                <button 
-                    onClick={handleSubmit} 
-                    disabled={loading || selectedScore === null}
-                    style={styles.submitBtn}
-                >
-                    {loading ? 'Recording...' : 'Record Score & Continue'}
-                </button>
+    if (submitted) {
+        return (
+            <div style={styles.card}>
+                <p style={styles.successMessage}>✅ Today's Check Complete!</p>
+                <p style={{fontSize: '0.9em', textAlign: 'center'}}>Thanks for contributing to StudyCircle's insights.</p>
             </div>
+        );
+    }
+
+    return (
+        <div style={styles.card}>
+            <p style={styles.prompt}>🧠 **Daily Check:** How overwhelmed do you feel right now? (1=Calm, 5=Burnout)</p>
+            
+            <div style={styles.buttonContainer}>
+                {scores.map(score => (
+                    <button 
+                        key={score} 
+                        style={styles.scoreButton(selectedScore === score)} 
+                        onClick={() => setSelectedScore(score)}
+                    >
+                        {score}
+                    </button>
+                ))}
+            </div>
+            
+            <button 
+                onClick={handleSubmit} 
+                disabled={loading || selectedScore === null}
+                style={styles.submitBtn}
+            >
+                {loading ? 'Recording...' : 'Record Score'}
+            </button>
         </div>
     );
 };
