@@ -4,6 +4,7 @@ import { computeStatusFromDates } from "../utils.js";
 import { styles } from "../styles.js";
 import Home from "./Home.jsx";
 import Sprint_room from "./Sprint_room.jsx";
+import ProgressFeed from "./ProgressFeed.jsx";
 
 // ---------- Mock DB ----------
 const initialSprints = [
@@ -30,7 +31,7 @@ const initialSprints = [
     tasks: ["Read docs", "Build small app"],
   },
   {
-  id: "3",
+    id: "3",
     name: "JavaS",
     owner: "Migz",
     description: "Learn Vanilla Js from basics.",
@@ -40,26 +41,26 @@ const initialSprints = [
     members: ["3"],
     tasks: ["Read docs", "Build small app"],
   },
-   {
-  id: "4",
+  {
+    id: "4",
     name: "Reacting",
     owner: "Taran",
     description: "Learn React Js from basics.",
     startDate: "2024-12-25",
     endDate: "2024-12-26",
     status: "scheduled",
-    members: ["3"],
+    members: ["4"],
     tasks: ["Read docs", "Build small app"],
   },
-   {
-  id: "5",
+  {
+    id: "5",
     name: "Deployment",
     owner: "Martin",
     description: "Learn how to deploy with vercel.",
     startDate: "2024-12-25",
     endDate: "2024-12-26",
     status: "paused",
-    members: ["4"],
+    members: ["5"],
     tasks: ["Read docs", "Build small app"],
   },
 ];
@@ -69,7 +70,11 @@ export default function App() {
   const [sprints, setSprints] = useState(() => {
     const raw = localStorage.getItem("sprints_v1");
     const loaded = raw ? JSON.parse(raw) : initialSprints;
-    return loaded.map((s) => ({ ...s, status: computeStatusFromDates(s), secondsElapsed: 0 }));
+    return loaded.map((s) => ({
+      ...s,
+      status: computeStatusFromDates(s),
+      secondsElapsed: 0,
+    }));
   });
 
   const [members, setMembers] = useState([]);
@@ -78,11 +83,14 @@ export default function App() {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const res = await fetch("https://api.jsonbin.io/v3/b/YOUR_BIN_ID/latest", {
-          headers: {
-            // "X-Master-Key": "YOUR_JSONBIN_KEY", // if private
-          },
-        });
+        const res = await fetch(
+          "https://api.jsonbin.io/v3/b/YOUR_BIN_ID/latest",
+          {
+            headers: {
+              // "X-Master-Key": "YOUR_JSONBIN_KEY", // if private
+            },
+          }
+        );
         const data = await res.json();
         setMembers(data.record.members || []);
       } catch (err) {
@@ -115,18 +123,29 @@ export default function App() {
           <Routes>
             <Route
               path="/"
-              element={<Home sprints={sprints} setSprints={setSprints} members={members} />}
+              element={
+                <Home
+                  sprints={sprints}
+                  setSprints={setSprints}
+                  members={members}
+                />
+              }
             />
             <Route
               path="/room/:id"
-              element={<Sprint_room sprints={sprints} updateSprint={updateSprint} members={members} />}
+              element={
+                <Sprint_room
+                  sprints={sprints}
+                  updateSprint={updateSprint}
+                  members={members}
+                />
+              }
             />
+            <Route path="/progress" element={<ProgressFeed />} />
           </Routes>
         </main>
 
-        <footer style={styles.footer}>
-          Learning Collaboration Platform
-        </footer>
+        <footer style={styles.footer}>Learning Collaboration Platform</footer>
       </div>
     </BrowserRouter>
   );
