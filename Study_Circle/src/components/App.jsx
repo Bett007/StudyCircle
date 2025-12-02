@@ -83,10 +83,10 @@ export default function App() {
     const fetchMembers = async () => {
       try {
         const res = await fetch(
-          "https://api.jsonbin.io/v3/b/YOUR_BIN_ID/latest",
+          // "https://api.jsonbin.io/v3/b/YOUR_BIN_ID/latest",
           {
             headers: {
-              // "X-Master-Key": "YOUR_JSONBIN_KEY", // if private
+
             },
           }
         );
