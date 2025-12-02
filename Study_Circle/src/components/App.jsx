@@ -116,6 +116,7 @@ export default function App() {
       <div className="container">
         <header className="header">
           <h1>Moringa School</h1>
+          <h2>Dashboard</h2>
         </header>
 
         <main className="main">
