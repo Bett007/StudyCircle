@@ -22,23 +22,17 @@ function MessageList() {
   }
 
   return (
-    <div>
+    <div className="message-list">
       {messages.map((msg) => (
-        <div key={msg.id} className="post-card">
-          <img src={msg.avatar} alt="avatar" className="avatar" />
-          <div className="post-content">
-            <div className="post-header">
-              
-              <span className="username">Anonymous</span>
-
-              <span className="timestamp">
-                {msg.createdAt
-                  ? new Date(msg.createdAt.toDate()).toLocaleString()
-                  : "Just now"}
-              </span>
-
-            </div>
-            <p className="post-text">{msg.text}</p>
+        <div key={msg.id} className="message-item">
+          <img src={msg.avatar} alt="avatar" className="message-avatar" />
+          <div className="message-content">
+            <p className="message-text">{msg.text}</p>
+            <span className="message-timestamp">
+              {msg.createdAt
+                ? new Date(msg.createdAt.toDate()).toLocaleString()
+                : "Just now"}
+            </span>
           </div>
         </div>
       ))}
