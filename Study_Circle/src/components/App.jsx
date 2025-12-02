@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { computeStatusFromDates } from "../utils.js";
-import { styles } from "../styles.js";
 import Home from "./Home.jsx";
 import Sprint_room from "./Sprint_room.jsx";
+import ProgressFeed from "./ProgressFeed.jsx";
 
 // ---------- Mock DB ----------
 const initialSprints = [
@@ -113,12 +113,12 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div style={styles.container}>
-        <header style={styles.header}>
-          <h1 style={{ margin: 0 }}>Moringa School</h1>
+      <div className="container">
+        <header className="header">
+          <h1>Moringa School</h1>
         </header>
 
-        <main style={styles.main}>
+        <main className="main">
           <Routes>
             <Route
               path="/"
@@ -144,7 +144,7 @@ export default function App() {
           </Routes>
         </main>
 
-        <footer style={styles.footer}>Learning Collaboration Platform</footer>
+        <footer className="footer">Learning Collaboration Platform</footer>
       </div>
     </BrowserRouter>
   );

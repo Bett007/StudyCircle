@@ -98,7 +98,11 @@ export default function CreateModal({ type = "personal", onClose, onCreate }) {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
+                style={{
+                  padding: 10,
+                  borderRadius: 8,
+                  border: "1px solid #ccc",
+                }}
               />
             </div>
             <div style={{ flex: 1 }}>
@@ -107,7 +111,11 @@ export default function CreateModal({ type = "personal", onClose, onCreate }) {
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
+                style={{
+                  padding: 10,
+                  borderRadius: 8,
+                  border: "1px solid #ccc",
+                }}
               />
             </div>
           </div>
@@ -127,7 +135,9 @@ export default function CreateModal({ type = "personal", onClose, onCreate }) {
             style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
           />
 
-          <label>Tasks (one per line){type === "group" ? " — at least 2" : ""}</label>
+          <label>
+            Tasks (one per line){type === "group" ? " — at least 2" : ""}
+          </label>
           <textarea
             value={tasksText}
             onChange={(e) => setTasksText(e.target.value)}
@@ -135,18 +145,22 @@ export default function CreateModal({ type = "personal", onClose, onCreate }) {
             style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
           />
 
-          {error && <div style={{ color: "#d9534f", fontWeight: 500 }}>{error}</div>}
+          {error && (
+            <div style={{ color: "#d9534f", fontWeight: 500 }}>{error}</div>
+          )}
 
           <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
             <button
               onClick={validateAndCreate}
-              style={{ ...styles.btn, flex: 1, padding: "10px 16px" }}
+              className="btn"
+              style={{ flex: 1, padding: "10px 16px" }}
             >
               Create
             </button>
             <button
               onClick={onClose}
-              style={{ ...styles.btnSecondary, flex: 1, padding: "10px 16px" }}
+              className="btnSecondary"
+              style={{ flex: 1, padding: "10px 16px" }}
             >
               Cancel
             </button>

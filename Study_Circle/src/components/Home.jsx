@@ -62,9 +62,12 @@ function Home({ sprints, setSprints }) {
             placeholder="🔍 Search for sprint room..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            style={{ ...styles.search, fontSize: 15, padding: "8px 10px", flex: 1 }}
+            className="search"
+            style={{ fontSize: 15, padding: "8px 10px", flex: 1 }}
           />
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", fontSize: 13 }}>
+          <div
+            style={{ display: "flex", gap: 6, flexWrap: "wrap", fontSize: 13 }}
+          >
             {["all", "scheduled", "running", "paused", "completed"].map((f) => (
               <label key={f} style={{ fontSize: 13, cursor: "pointer" }}>
                 <input
@@ -89,7 +92,9 @@ function Home({ sprints, setSprints }) {
             borderRadius: 10,
           }}
         >
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15 }}>
+          <table
+            style={{ width: "100%", borderCollapse: "collapse", fontSize: 15 }}
+          >
             <thead>
               <tr
                 style={{
@@ -111,13 +116,21 @@ function Home({ sprints, setSprints }) {
               {filtered.map((s, idx) => (
                 <tr
                   key={s.id}
-                  style={{ borderBottom: "1px solid #f0f0f0", height: 42, cursor: "pointer" }}
+                  style={{
+                    borderBottom: "1px solid #f0f0f0",
+                    height: 42,
+                    cursor: "pointer",
+                  }}
                   onClick={() => setActiveSprint(s)}
                 >
                   <td style={{ padding: "10px 8px" }}>{idx + 1}</td>
                   <td style={{ padding: "10px 8px" }}>{s.name}</td>
                   <td style={{ padding: "10px 8px" }}>{s.owner}</td>
-                  <td style={{ padding: "10px 8px", textTransform: "capitalize" }}>{s.status}</td>
+                  <td
+                    style={{ padding: "10px 8px", textTransform: "capitalize" }}
+                  >
+                    {s.status}
+                  </td>
                   <td style={{ padding: "10px 8px" }}>{s.endDate || "—"}</td>
                 </tr>
               ))}
@@ -132,7 +145,12 @@ function Home({ sprints, setSprints }) {
               setCreateType("personal");
               setShowCreate(true);
             }}
-            style={{ ...styles.btn, padding: "8px 14px", fontSize: 14, width: 140 }}
+            style={{
+              ...styles.btn,
+              padding: "8px 14px",
+              fontSize: 14,
+              width: 140,
+            }}
           >
             Personal
           </button>
@@ -141,7 +159,12 @@ function Home({ sprints, setSprints }) {
               setCreateType("group");
               setShowCreate(true);
             }}
-            style={{ ...styles.btn, padding: "8px 14px", fontSize: 14, width: 140 }}
+            style={{
+              ...styles.btn,
+              padding: "8px 14px",
+              fontSize: 14,
+              width: 140,
+            }}
           >
             Group Sprint
           </button>
