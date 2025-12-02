@@ -16,7 +16,6 @@
 - Post study updates
 - Share feedback
 
-
 ### 3. SOS 
 #### A dedicated help section that allows students to:
 - Request support when stuck
@@ -52,6 +51,12 @@
 
 4.Build for Production
 `npm run build`
+
+## Future Implemetations
+1. Availability/Matchmaking Feature
+2. SOS Button for Help
+3. Login Feature for students to access the dashboard
+4. Customised Profile Pictures
 
 ## Folder Structure
 
