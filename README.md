@@ -27,6 +27,13 @@
 - Productivity patterns
 - Self and Mood Check-Ins
 
+### Future Implementation
+1. Availability/Matchmaking Feature.
+2. Login Feature for students to access Dashboard and Features
+3. Custom Profile Pictures
+4. Shared Notes
+5. Sprint Room DJ
+
 ## Technology Used
 1. Frontend: React + Vite
 2. Hosting: Vercel
@@ -70,3 +77,5 @@
 3. Martin Mwabali
 4. Miguel Gicheru
 5. Taran Chase
+6. Miguel Gicheru
+7. Taran Chase
