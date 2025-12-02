@@ -1,7 +1,9 @@
 /* ---------- Styles ---------- */
 
 .container {
-  max-width: 980px;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100vw;
   margin: 12px auto;
   padding: 12px;
   font-family: Inter, Roboto, sans-serif;
@@ -133,11 +135,11 @@
   padding: 20px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: #f7f8fa;
-  min-height: 100vh;
 }
 
 .feed-column {
   flex: 1;
+  margin: 0;
   max-width: 600px;
   background: #fff;
   border-radius: 12px;
@@ -326,4 +328,22 @@ body.dark .message-timestamp {
 body.dark .dark-toggle {
   background: #f7f8fa;
   color: #333;
+}
+
+/* Home Layout Responsive Styles */
+.home-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.sprint-room-panel {
+  flex: 1 1 60%;
+  width: 60vw;
+}
+
+.progress-feed-panel {
+  flex: 1 1 40%;
+  margin: 20px 0 0 0;
+  width: 40vw;
 }

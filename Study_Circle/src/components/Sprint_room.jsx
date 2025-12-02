@@ -4,7 +4,9 @@ import { styles } from "../styles.js";
 import PomodoroModal from "./Pomodoro.jsx"; // Pomodoro component
 
 function Sprint_room({ sprint, updateSprint, onClose }) {
-  const [secondsElapsed, setSecondsElapsed] = useState(sprint?.secondsElapsed || 0);
+  const [secondsElapsed, setSecondsElapsed] = useState(
+    sprint?.secondsElapsed || 0
+  );
   const [running, setRunning] = useState(sprint?.status === "running");
   const timerRef = useRef(null);
 
@@ -17,7 +19,10 @@ function Sprint_room({ sprint, updateSprint, onClose }) {
   // ---------- TIMER LOGIC ----------
   useEffect(() => {
     if (running) {
-      timerRef.current = setInterval(() => setSecondsElapsed(prev => prev + 1), 1000);
+      timerRef.current = setInterval(
+        () => setSecondsElapsed((prev) => prev + 1),
+        1000
+      );
     } else if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
@@ -45,7 +50,7 @@ function Sprint_room({ sprint, updateSprint, onClose }) {
 
   const handleSendMessage = () => {
     if (chatInput.trim()) {
-      setChatMessages(prev => [
+      setChatMessages((prev) => [
         ...prev,
         { text: chatInput, timestamp: new Date(), senderId: "You" },
       ]);
@@ -94,7 +99,8 @@ function Sprint_room({ sprint, updateSprint, onClose }) {
               <strong>Owner:</strong> {sprint.owner}
             </div>
             <div>
-              <strong>Period:</strong> {sprint.startDate} → {sprint.endDate || "—"}
+              <strong>Period:</strong> {sprint.startDate} →{" "}
+              {sprint.endDate || "—"}
             </div>
 
             <section>
@@ -136,8 +142,8 @@ function Sprint_room({ sprint, updateSprint, onClose }) {
 
           {/* ---------- SIDEBAR ---------- */}
           <aside
+            className="card"
             style={{
-              ...styles.card,
               padding: 16,
               display: "flex",
               flexDirection: "column",
@@ -156,11 +162,23 @@ function Sprint_room({ sprint, updateSprint, onClose }) {
             {/* MEMBERS */}
             <div>
               <h5>Members</h5>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 6 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                  marginTop: 6,
+                }}
+              >
                 {sprint.members?.map((name, idx) => (
-                  <div key={idx} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div
+                    key={idx}
+                    style={{ display: "flex", alignItems: "center", gap: 8 }}
+                  >
                     <img
-                      src={`https://via.placeholder.com/36.png?text=${name.charAt(0)}`}
+                      src={`https://via.placeholder.com/36.png?text=${name.charAt(
+                        0
+                      )}`}
                       alt={name}
                       style={{
                         width: 36,
@@ -230,8 +248,8 @@ function Sprint_room({ sprint, updateSprint, onClose }) {
             <div>
               <button
                 onClick={onClose}
+                className="link"
                 style={{
-                  ...styles.link,
                   border: "none",
                   background: "transparent",
                   cursor: "pointer",
